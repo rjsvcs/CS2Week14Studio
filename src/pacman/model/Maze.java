@@ -9,21 +9,19 @@ public class Maze extends Graph<Location, Integer> {
     private Location pacman;
     private final Set<Location> pellets;
 
-    private int rows;
-    private int cols;
+    private final int rows;
+    private final int cols;
 
-    public Maze(Location pacman, Set<Location> pellets) {
+    public Maze(int rows, int cols, Location pacman,
+                Set<Location> pellets) {
+        this.rows = rows;
+        this.cols = cols;
         this.pacman = pacman;
         this.pellets = pellets;
-
-        rows = -1;
-        cols = -1;
     }
 
     public void addValue(Location location) {
         super.addValue(location);
-        cols = location.getCol() <= cols ? cols : location.getCol() + 1;
-        rows = location.getRow() <= rows ? rows : location.getRow() + 1;
     }
 
     public int getRows() {

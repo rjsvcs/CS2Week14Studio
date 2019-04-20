@@ -23,7 +23,11 @@ public class MazeMaker {
             Location pacman = null;
             Set<Location> pellets = new HashSet<>();
 
-            String line;
+            String line = reader.readLine();
+            String[] dimensions = line.split(" ");
+            int rows = Integer.parseInt(dimensions[0]);
+            int cols = Integer.parseInt(dimensions[1]);
+
             while((line = reader.readLine()) != null) {
                 if(line.equals(PATHWAYS)) {
                     break;
@@ -52,7 +56,7 @@ public class MazeMaker {
                 }
             }
 
-            Maze maze = new Maze(pacman, pellets);
+            Maze maze = new Maze(rows, cols, pacman, pellets);
             for(Location location : locations.values()) {
                 maze.addValue(location);
             }
