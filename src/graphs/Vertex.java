@@ -1,9 +1,6 @@
 package graphs;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Represents a single vertex in a graph.
@@ -41,12 +38,23 @@ public class Vertex<T,W> {
         return value;
     }
 
+    /**
+     * Creates a weighted edge between the vertex and a neighbor.
+     *
+     * @param neighbor The neighboring vertex to which a weighted edge should
+     *                 be created.
+     * @param weight The weight of the new edge.
+     */
     public void addNeighbor(Vertex<T,W> neighbor, W weight) {
         Edge<T,W> edge = new Edge<>(this, neighbor, weight);
         neighbors.add(edge);
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * Returns the edges between this vertex and its neighbors.
+     *
+     * @return A {@link Set} of edges between this vertex and its neighbors.
+     */
     public Set<Edge<T,W>> getNeighbors() {
         return Collections.unmodifiableSet(neighbors);
     }
