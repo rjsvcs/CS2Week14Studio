@@ -1,8 +1,15 @@
-8 25
-bbbbbwwwwwwwwwwwwwwbbbbb
-bbbbbwo==========owbbbbb
-bbbbbw=wwwwwwwwww=wbbbbb
-bbbbbw=wbbbbbbbbw=wbbbbb
-wwwwww=wwwwwwwwww=wwwwww
-s=====o==========o=====e
-wwwwwwwwwwwwwwwwwwwwwwww
+0 4 0
+1 4 5
+2 4 10
+3 4 15
+4 0 5
+5 0 10
+##PATHWAYS##
+0 1
+1 2 G
+1 4
+2 3
+2 5
+4 5
+##POWER##
+3

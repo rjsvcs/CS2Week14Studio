@@ -1,12 +1,21 @@
 package pacman;
 
 import javafx.application.Application;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.*;
 import java.util.List;
 
 public class PacMan extends Application {
+    private static final char WALL = 'w';
+    private static final char BACKGROUND = 'b';
+    private static final char PATHWAY = '=';
+    private static final char INTERSECTION = 'o';
+
+
+    private GridPane maze;
+
     @Override
     public void init() throws Exception {
         super.init();
@@ -31,10 +40,18 @@ public class PacMan extends Application {
             InputStreamReader inputReader = new InputStreamReader(fin);
             BufferedReader reader = new BufferedReader(inputReader)) {
 
-            String[] dim = reader.readLine().trim().split(" ");
-            int rows = Integer.parseInt(dim[0]);
-            int cols = Integer.parseInt(dim[1]);
 
+
+            int row = 0;
+            String line;
+            while((line = reader.readLine()) != null) {
+                int col = 0;
+                for(char c : line.toCharArray()) {
+                    switch (c) {
+
+                    }
+                }
+            }
 
         } catch(IOException ioe) {
             System.err.println("Error loading maze: " + ioe.getMessage());
