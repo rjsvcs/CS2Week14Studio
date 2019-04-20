@@ -56,6 +56,25 @@ public class Edge<T,W> {
     }
 
     /**
+     * Returns the origin vertex.
+     *
+     * @return The origin vertex.
+     */
+    public Vertex<T,W> getFrom() {
+        return from;
+    }
+
+    /**
+     * Convenience method to return the value from the origin vertex. Mostly
+     * to silence Demeter's voice in my head.
+     *
+     * @return The value contained by the origin vertex.
+     */
+    public T getFromValue() {
+        return from.getValue();
+    }
+
+    /**
      * Returns the destination vertex.
      *
      * @return The destination vertex.
@@ -65,12 +84,13 @@ public class Edge<T,W> {
     }
 
     /**
-     * Returns the origin vertex.
+     * Convenience method to return the value from the destination vertex.
+     * Mostly to silence Demeter's voice in my head.
      *
-     * @return The origin vertex.
+     * @return The value contained by the destination vertex.
      */
-    public Vertex<T,W> getFrom() {
-        return from;
+    public T getToValue() {
+        return to.getValue();
     }
 
     @Override

@@ -6,7 +6,7 @@
     <option name="VM_PARAMETERS" value="--module-path C:\Users\Bobby\javafx-sdk-11.0.1\lib --add-modules=ALL-MODULE-PATH" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="pacman.*" />
+        <option name="PATTERN" value="pacman.model.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
