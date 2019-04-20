@@ -7,7 +7,7 @@ import java.util.*;
  *
  * @param <T> The type of value held by the vertex.
  */
-public class Vertex<T,W> {
+public class Vertex<T> {
     /**
      * The value.
      */
@@ -17,7 +17,7 @@ public class Vertex<T,W> {
      * The set of neighboring vertices, to which this vertex is connected by
      * an edge.
      */
-    private final Set<Edge<T,W>> neighbors;
+    private final Set<Edge<T>> neighbors;
 
     /**
      * Creates a new vertex with the specified value.
@@ -45,8 +45,8 @@ public class Vertex<T,W> {
      *                 be created.
      * @param weight The weight of the new edge.
      */
-    public void addNeighbor(Vertex<T,W> neighbor, W weight) {
-        Edge<T,W> edge = new Edge<>(this, neighbor, weight);
+    public void addNeighbor(Vertex<T> neighbor, int weight) {
+        Edge<T> edge = new Edge<>(this, neighbor, weight);
         neighbors.add(edge);
     }
 
@@ -55,7 +55,7 @@ public class Vertex<T,W> {
      *
      * @return A {@link Set} of edges between this vertex and its neighbors.
      */
-    public Set<Edge<T,W>> getNeighbors() {
+    public Set<Edge<T>> getNeighbors() {
         return Collections.unmodifiableSet(neighbors);
     }
 }

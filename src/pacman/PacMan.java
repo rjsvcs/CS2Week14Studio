@@ -43,41 +43,37 @@ public class PacMan extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        try {
-            int rows = maze.getRows();
-            int cols = maze.getCols();
+        int rows = maze.getRows();
+        int cols = maze.getCols();
 
-            mazeCells = new MazeCell[rows][cols];
-            mazePane = new GridPane();
+        mazeCells = new MazeCell[rows][cols];
+        mazePane = new GridPane();
 
-            for (int row = 0; row < rows; row++) {
-                for (int col = 0; col < cols; col++) {
-                    MazeCell cell = new MazeCell();
-                    mazeCells[row][col] = cell;
-                    mazePane.add(cell, col, row);
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                MazeCell cell = new MazeCell();
+                mazeCells[row][col] = cell;
+                mazePane.add(cell, col, row);
+            }
+        }
+
+        for (Edge<Location> edge : maze.getEdges()) {
+            Location origin = edge.getFromValue();
+            Location destination = edge.getToValue();
+            List<Location> pathway = origin.getPathway(destination);
+            if (pathway != null) {
+                for (Location path : pathway) {
+                    mazeCells[path.getRow()][path.getCol()].setPathway();
                 }
+            } else {
+                throw new IllegalStateException(
+                        "Maze contains a non-perpendicular pathway: " + edge);
             }
+        }
 
-            for (Edge<Location, Integer> edge : maze.getEdges()) {
-                Location origin = edge.getFromValue();
-                Location destination = edge.getToValue();
-                List<Location> pathway = origin.getPathway(destination);
-                if (pathway != null) {
-                    for (Location path : pathway) {
-                        mazeCells[path.getRow()][path.getCol()].setPathway();
-                    }
-                } else {
-                    throw new IllegalStateException(
-                            "Maze contains a non-perpendicular pathway: " + edge);
-                }
-            }
-
-            stage.setTitle("Pac-Man!");
-            stage.setScene(new Scene(mazePane));
-            stage.show();
-        } catch(Throwable thrown) {
-          thrown.printStackTrace();
-            }
+        stage.setTitle("Pac-Man!");
+        stage.setScene(new Scene(mazePane));
+        stage.show();
     }
 
     @Override

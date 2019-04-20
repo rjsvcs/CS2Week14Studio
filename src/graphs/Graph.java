@@ -8,11 +8,11 @@ import java.util.*;
  * @param <T> The type parameter indicating the type of values stored by the
  *           vertices in the graph.
  */
-public class Graph<T,W> {
+public class Graph<T> {
     /**
      * A {@link Map} of values to vertices.
      */
-    private final Map<T, Vertex<T,W>> vertices;
+    private final Map<T, Vertex<T>> vertices;
 
     /**
      * Creates a new, empty graph.
@@ -38,7 +38,7 @@ public class Graph<T,W> {
      * @param value The value to add to the graph.
      */
     public void addValue(T value) {
-        Vertex<T,W> vertex = new Vertex<>(value);
+        Vertex<T> vertex = new Vertex<>(value);
         vertices.put(value, vertex);
     }
 
@@ -61,9 +61,9 @@ public class Graph<T,W> {
      * @param toValue The value to which the first value should be connected.
      * @param weight The weight of the {@link Edge} between the two vertices.
      */
-    public void connectDirected(T fromValue, T toValue, W weight) {
-        Vertex<T,W> from = vertices.get(fromValue);
-        Vertex<T,W> to = vertices.get(toValue);
+    public void connectDirected(T fromValue, T toValue, int weight) {
+        Vertex<T> from = vertices.get(fromValue);
+        Vertex<T> to = vertices.get(toValue);
 
         from.addNeighbor(to, weight);
     }
@@ -76,9 +76,9 @@ public class Graph<T,W> {
      * @param toValue The value to which the first value should be connected.
      * @param weight The weight of the {@link Edge} between the two vertices.
      */
-    public void connectUndirected(T fromValue, T toValue, W weight) {
-        Vertex<T,W> from = vertices.get(fromValue);
-        Vertex<T,W> to = vertices.get(toValue);
+    public void connectUndirected(T fromValue, T toValue, int weight) {
+        Vertex<T> from = vertices.get(fromValue);
+        Vertex<T> to = vertices.get(toValue);
 
         from.addNeighbor(to, weight);
         to.addNeighbor(from, weight);
@@ -89,13 +89,13 @@ public class Graph<T,W> {
      *
      * @return A {@link Collection} of all of the vertices in the graph.
      */
-    public Collection<Vertex<T,W>> getVertices() {
+    public Collection<Vertex<T>> getVertices() {
         return Collections.unmodifiableCollection(vertices.values());
     }
 
-    public Collection<Edge<T,W>> getEdges() {
-        Set<Edge<T,W>> edges = new HashSet<>();
-        for(Vertex<T,W> vertex : vertices.values()) {
+    public Collection<Edge<T>> getEdges() {
+        Set<Edge<T>> edges = new HashSet<>();
+        for(Vertex<T> vertex : vertices.values()) {
             edges.addAll(vertex.getNeighbors());
         }
         return edges;
@@ -111,22 +111,22 @@ public class Graph<T,W> {
      * otherwise.
      */
     public boolean breadthFirstSearch(T startValue, T endValue) {
-        Vertex<T,W> start = vertices.get(startValue);
-        Vertex<T,W> end = vertices.get(endValue);
+        Vertex<T> start = vertices.get(startValue);
+        Vertex<T> end = vertices.get(endValue);
 
-        Queue<Vertex<T,W>> queue = new LinkedList<>();
-        Set<Vertex<T,W>> seen = new HashSet<>();
+        Queue<Vertex<T>> queue = new LinkedList<>();
+        Set<Vertex<T>> seen = new HashSet<>();
 
         queue.add(start);
         seen.add(start);
 
         while(queue.size() > 0) {
-            Vertex<T,W> next = queue.poll();
+            Vertex<T> next = queue.poll();
             if(next == end) {
                 return true;
             } else {
-                for(Edge<T,W> edge : next.getNeighbors()) {
-                    Vertex<T,W> neighbor = edge.getTo();
+                for(Edge<T> edge : next.getNeighbors()) {
+                    Vertex<T> neighbor = edge.getTo();
                     if(!seen.contains(neighbor)) {
                         seen.add(neighbor);
                         queue.add(neighbor);
@@ -148,22 +148,22 @@ public class Graph<T,W> {
      * returns null.
      */
     public List<T> breadthFirstPath(T startValue, T endValue) {
-        Vertex<T,W> start = vertices.get(startValue);
-        Vertex<T,W> end = vertices.get(endValue);
+        Vertex<T> start = vertices.get(startValue);
+        Vertex<T> end = vertices.get(endValue);
 
-        Queue<Vertex<T,W>> queue = new LinkedList<>();
-        Map<Vertex<T,W>, Vertex<T,W>> seen = new HashMap<>();
+        Queue<Vertex<T>> queue = new LinkedList<>();
+        Map<Vertex<T>, Vertex<T>> seen = new HashMap<>();
 
         queue.add(start);
         seen.put(start, null);
 
         while(queue.size() > 0) {
-            Vertex<T,W> next = queue.poll();
+            Vertex<T> next = queue.poll();
             if(next == end) {
                 return makePathBFS(end, seen);
             } else {
-                for(Edge<T,W> edge : next.getNeighbors()) {
-                    Vertex<T,W> neighbor = edge.getTo();
+                for(Edge<T> edge : next.getNeighbors()) {
+                    Vertex<T> neighbor = edge.getTo();
                     if(!seen.containsKey(neighbor)) {
                         seen.put(neighbor, next);
                         queue.add(neighbor);
@@ -184,10 +184,10 @@ public class Graph<T,W> {
      * @return True if the path exists, false otherwise.
      */
     public boolean depthFirstSearch(T startValue, T endValue) {
-        Vertex<T,W> start = vertices.get(startValue);
-        Vertex<T,W> end = vertices.get(endValue);
+        Vertex<T> start = vertices.get(startValue);
+        Vertex<T> end = vertices.get(endValue);
 
-        Set<Vertex<T,W>> visited = new HashSet<>();
+        Set<Vertex<T>> visited = new HashSet<>();
         visited.add(start);
 
         visitDFS(start, visited);
@@ -205,10 +205,10 @@ public class Graph<T,W> {
      * otherwise.
      */
     public List<T> depthFirstPath(T startValue, T endValue) {
-        Vertex<T,W> start = vertices.get(startValue);
-        Vertex<T,W> end = vertices.get(endValue);
+        Vertex<T> start = vertices.get(startValue);
+        Vertex<T> end = vertices.get(endValue);
 
-        Set<Vertex<T,W>> visited = new HashSet<>();
+        Set<Vertex<T>> visited = new HashSet<>();
         visited.add(start);
 
         return makePathDFS(start, end, visited);
@@ -225,12 +225,12 @@ public class Graph<T,W> {
      *
      * @return The path from start to end.
      */
-    private List<T> makePathBFS(Vertex<T,W> end, Map<Vertex<T,W>,
-            Vertex<T,W>> seen) {
+    private List<T> makePathBFS(Vertex<T> end, Map<Vertex<T>,
+            Vertex<T>> seen) {
 
         List<T> path = new LinkedList<>();
 
-        Vertex<T,W> next = end;
+        Vertex<T> next = end;
         while(next != null) {  // null means we found the start
             path.add(0, next.getValue());
             next = seen.get(next);
@@ -246,9 +246,9 @@ public class Graph<T,W> {
      * @param vertex The vertex of which the neighbors should be visited.
      * @param visited The {@link Set} of previously visited vertices.
      */
-    private void visitDFS(Vertex<T,W> vertex, Set<Vertex<T,W>> visited) {
-        for(Edge<T,W> edge : vertex.getNeighbors()) {
-            Vertex<T,W> neighbor = edge.getTo();
+    private void visitDFS(Vertex<T> vertex, Set<Vertex<T>> visited) {
+        for(Edge<T> edge : vertex.getNeighbors()) {
+            Vertex<T> neighbor = edge.getTo();
             if(!visited.contains(neighbor)) {
                 visited.add(neighbor);
                 visitDFS(neighbor, visited);
@@ -266,15 +266,15 @@ public class Graph<T,W> {
      * @return A path containing the values between start and end, or null if
      * no such path exists.
      */
-    private List<T> makePathDFS(Vertex<T,W> start, Vertex<T,W> end,
-                                Set<Vertex<T,W>> visited) {
+    private List<T> makePathDFS(Vertex<T> start, Vertex<T> end,
+                                Set<Vertex<T>> visited) {
         if(start == end) {
             List<T> path = new LinkedList<>();
             path.add(start.getValue());
             return path;
         } else {
-            for(Edge<T,W> edge : start.getNeighbors()) {
-                Vertex<T,W> neighbor = edge.getTo();
+            for(Edge<T> edge : start.getNeighbors()) {
+                Vertex<T> neighbor = edge.getTo();
                 if(!visited.contains(neighbor)) {
                     visited.add(neighbor);
                     List<T> path = makePathDFS(neighbor, end, visited);

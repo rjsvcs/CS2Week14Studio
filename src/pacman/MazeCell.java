@@ -11,10 +11,12 @@ public class MazeCell extends StackPane {
     private static final Image EMPTY = new Image(IMAGE_PATH + "empty.png");
 
     private final ImageView background;
+    private final ImageView midground;
     private final ImageView foreground;
 
     MazeCell() {
         background = new ImageView(WALL);
+        midground = new ImageView(EMPTY);
         foreground = new ImageView(EMPTY);
 
         getChildren().addAll(background, foreground);

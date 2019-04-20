@@ -8,21 +8,21 @@ import java.util.Objects;
  * @param <T> The type parameter for the values stored by the vertices.
  * @param <W> The type parameter for the edge weights.
  */
-public class Edge<T,W> {
+public class Edge<T> {
     /**
      * The origin vertex.
      */
-    private final Vertex<T,W> from;
+    private final Vertex<T> from;
 
     /**
      * The destination vertex.
      */
-    private final Vertex<T,W> to;
+    private final Vertex<T> to;
 
     /**
      * The weight of the edge.
      */
-    private W weight;
+    private int weight;
 
     /**
      * Creates a new edge between two vertices with the specified weight.
@@ -31,7 +31,7 @@ public class Edge<T,W> {
      * @param to The destination vertex.
      * @param weight The weight of the edge.
      */
-    public Edge(Vertex<T,W> from, Vertex<T,W> to, W weight) {
+    public Edge(Vertex<T> from, Vertex<T> to, int weight) {
         this.from = from;
         this.to = to;
         this.weight = weight;
@@ -42,7 +42,7 @@ public class Edge<T,W> {
      *
      * @param weight The new weight of the edge.
      */
-    public void setWeight(W weight) {
+    public void setWeight(int weight) {
         this.weight = weight;
     }
 
@@ -51,7 +51,7 @@ public class Edge<T,W> {
      *
      * @return The current weight of the edge.
      */
-    public W getWeight() {
+    public int getWeight() {
         return weight;
     }
 
@@ -60,7 +60,7 @@ public class Edge<T,W> {
      *
      * @return The origin vertex.
      */
-    public Vertex<T,W> getFrom() {
+    public Vertex<T> getFrom() {
         return from;
     }
 
@@ -79,7 +79,7 @@ public class Edge<T,W> {
      *
      * @return The destination vertex.
      */
-    public Vertex<T,W> getTo() {
+    public Vertex<T> getTo() {
         return to;
     }
 
@@ -97,7 +97,7 @@ public class Edge<T,W> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Edge<?, ?> edge = (Edge<?, ?>) o;
+        Edge<?> edge = (Edge<?>) o;
         return Objects.equals(from, edge.from) &&
                 Objects.equals(to, edge.to);
     }

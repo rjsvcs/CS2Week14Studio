@@ -5,7 +5,7 @@ import graphs.Graph;
 import java.util.List;
 import java.util.Set;
 
-public class Maze extends Graph<Location, Integer> {
+public class Maze extends Graph<Location> {
     private Location pacman;
     private final Set<Location> pellets;
 
