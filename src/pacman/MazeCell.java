@@ -10,6 +10,7 @@ public class MazeCell extends StackPane {
     private static final Image PATHWAY = new Image(IMAGE_PATH + "pathway.png");
     private static final Image PELLETS = new Image(IMAGE_PATH + "pellets.png");
     private static final Image EMPTY = new Image(IMAGE_PATH + "empty.png");
+    private static final Image PAC_MAN = new Image(IMAGE_PATH + "pac_right.png");
 
     private final ImageView background;
     private final ImageView midground;
@@ -30,5 +31,13 @@ public class MazeCell extends StackPane {
     public void setPathway() {
         background.setImage(PATHWAY);
         midground.setImage(PELLETS);
+    }
+
+    public void setPacMan(boolean pacMan) {
+        if(pacMan) {
+            foreground.setImage(PAC_MAN);
+        } else {
+            foreground.setImage(EMPTY);
+        }
     }
 }

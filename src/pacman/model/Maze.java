@@ -24,6 +24,10 @@ public class Maze extends Graph<Location> {
         super.addValue(location);
     }
 
+    public Location getPacMan() {
+        return pacman;
+    }
+
     public int getRows() {
         return rows;
     }

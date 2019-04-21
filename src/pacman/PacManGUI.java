@@ -12,7 +12,7 @@ import pacman.model.MazeMaker;
 import java.io.*;
 import java.util.List;
 
-public class PacMan extends Application {
+public class PacManGUI extends Application {
     private static final char WALL = 'w';
     private static final char BACKGROUND = 'b';
     private static final char PATHWAY = '=';
@@ -29,7 +29,7 @@ public class PacMan extends Application {
 
         List<String> params = getParameters().getRaw();
         if(params.size() != 1) {
-            System.err.println("Usage: java pacman.PacMan <filename>");
+            System.err.println("Usage: java pacman.PacManGUI <filename>");
             System.exit(1);
         }
 
@@ -51,6 +51,9 @@ public class PacMan extends Application {
                 mazePane.add(cell, col, row);
             }
         }
+
+        Location pacMan = maze.getPacMan();
+        mazeCells[pacMan.getRow()][pacMan.getCol()].setPacMan(true);
 
         for (Edge<Location> edge : maze.getEdges()) {
             Location origin = edge.getFromValue();
