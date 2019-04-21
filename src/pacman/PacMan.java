@@ -1,21 +1,16 @@
 package pacman;
 
 import graphs.Edge;
-import graphs.Vertex;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import pacman.model.Location;
 import pacman.model.Maze;
 import pacman.model.MazeMaker;
 
 import java.io.*;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class PacMan extends Application {
     private static final char WALL = 'w';
@@ -60,14 +55,10 @@ public class PacMan extends Application {
         for (Edge<Location> edge : maze.getEdges()) {
             Location origin = edge.getFromValue();
             Location destination = edge.getToValue();
-            List<Location> pathway = origin.getPathway(destination);
-            if (pathway != null) {
-                for (Location path : pathway) {
-                    mazeCells[path.getRow()][path.getCol()].setPathway();
-                }
-            } else {
-                throw new IllegalStateException(
-                        "Maze contains a non-perpendicular pathway: " + edge);
+            List<Location> pathway = origin.getPath(destination);
+
+            for (Location path : pathway) {
+                mazeCells[path.getRow()][path.getCol()].setPathway();
             }
         }
 

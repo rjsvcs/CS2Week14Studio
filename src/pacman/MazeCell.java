@@ -8,6 +8,7 @@ public class MazeCell extends StackPane {
     private static final String IMAGE_PATH = "file:media/images/";
     private static final Image WALL = new Image(IMAGE_PATH + "wall.png");
     private static final Image PATHWAY = new Image(IMAGE_PATH + "pathway.png");
+    private static final Image PELLETS = new Image(IMAGE_PATH + "pellets.png");
     private static final Image EMPTY = new Image(IMAGE_PATH + "empty.png");
 
     private final ImageView background;
@@ -19,7 +20,7 @@ public class MazeCell extends StackPane {
         midground = new ImageView(EMPTY);
         foreground = new ImageView(EMPTY);
 
-        getChildren().addAll(background, foreground);
+        getChildren().addAll(background, midground, foreground);
     }
 
     public void setWall() {
@@ -28,5 +29,6 @@ public class MazeCell extends StackPane {
 
     public void setPathway() {
         background.setImage(PATHWAY);
+        midground.setImage(PELLETS);
     }
 }

@@ -8,7 +8,7 @@ public class Location {
     private final int row;
     private final int col;
 
-    public Location(int row, int col) {
+    Location(int row, int col) {
         this.row = row;
         this.col = col;
     }
@@ -30,20 +30,6 @@ public class Location {
                 col == location.col;
     }
 
-    public List<Location> getPathway(Location destination) {
-        if(destination.getRow() == getRow()) {
-            return getCol() < destination.getCol()?
-                    getHorizontalPathway(this, destination) :
-                    getHorizontalPathway(destination, this);
-        } else if(destination.getCol() == getCol()) {
-            return getRow() < destination.getRow() ?
-                    getVerticalPathway(this, destination) :
-                    getVerticalPathway(destination, this);
-        } else {
-            return null;
-        }
-    }
-
     @Override
     public int hashCode() {
         return Objects.hash(row, col);
@@ -57,19 +43,41 @@ public class Location {
                 '}';
     }
 
-    private List<Location> getHorizontalPathway(Location start, Location end) {
-        List<Location> pathway = new ArrayList<>();
-        for(int col=start.getCol(); col<=end.getCol(); col++) {
-            pathway.add(new Location(start.getRow(), col));
+    public List<Location> getPath(Location other) {
+        if(getRow() == other.getRow()) {
+            return getHorizontalPath(this, other);
+        } else if( getCol() == other.getCol()) {
+            return getVerticalPath(this, other);
+        } else {
+            throw new IllegalStateException(
+                    "Maze contains non-perpendicular paths: " +
+                    this + ", " + other);
         }
-        return pathway;
     }
 
-    private List<Location> getVerticalPathway(Location start, Location end) {
-        List<Location> pathway = new ArrayList<>();
-        for(int row=start.getRow(); row<=end.getRow(); row++) {
-            pathway.add(new Location(row, start.getCol()));
+    private static List<Location> getHorizontalPath(Location start,
+                                                   Location end) {
+        List<Location> path = new ArrayList<>();
+        Location origin = start.getCol() < end.getCol() ?
+                start : end;
+        Location destination = start.getCol() < end.getCol() ?
+                end : start;
+        for(int col=origin.getCol(); col<=destination.getCol(); col++) {
+            path.add(new Location(origin.getRow(), col));
         }
-        return pathway;
+        return path;
+    }
+
+    private static List<Location> getVerticalPath(Location start,
+                                                    Location end) {
+        List<Location> path = new ArrayList<>();
+        Location origin = start.getRow() < end.getRow() ?
+                start : end;
+        Location destination = start.getRow() < end.getRow() ?
+                end : start;
+        for(int row=origin.getRow(); row<=destination.getRow(); row++) {
+            path.add(new Location(row, origin.getCol()));
+        }
+        return path;
     }
 }
