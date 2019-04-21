@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="PacMan" type="Application" factoryName="Application" nameIsGenerated="true">
-    <option name="MAIN_CLASS_NAME" value="pacman.PacMan" />
+  <configuration default="false" name="PacManGUI" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="pacman.PacManGUI" />
     <module name="CS2Week14Studio" />
     <option name="PROGRAM_PARAMETERS" value="media/mazes/simple.maz" />
     <option name="VM_PARAMETERS" value="--module-path C:\Users\Bobby\javafx-sdk-11.0.1\lib --add-modules=ALL-MODULE-PATH" />
