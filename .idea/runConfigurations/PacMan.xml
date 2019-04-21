@@ -3,7 +3,7 @@
     <option name="MAIN_CLASS_NAME" value="pacman.PacMan" />
     <module name="CS2Week14Studio" />
     <option name="PROGRAM_PARAMETERS" value="media/mazes/simple.maz" />
-    <option name="VM_PARAMETERS" value="--module-path C:\Users\phinn\javafx-sdk-11.0.1\lib --add-modules=ALL-MODULE-PATH" />
+    <option name="VM_PARAMETERS" value="--module-path C:\Users\Bobby\javafx-sdk-11.0.1\lib --add-modules=ALL-MODULE-PATH" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="pacman.model.*" />
