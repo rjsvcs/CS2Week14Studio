@@ -22,6 +22,7 @@ public class MazeMaker {
             Map<Integer, Location> locations = new HashMap<>();
             Location pacman = null;
             Set<Location> pellets = new HashSet<>();
+            Set<Location> ghosts = new HashSet<>();
 
             String line = reader.readLine();
             String[] dimensions = line.split(" ");
@@ -38,7 +39,6 @@ public class MazeMaker {
                 int row = Integer.parseInt(tokens[1]);
                 int col = Integer.parseInt(tokens[2]);
                 Location location = new Location(row, col);
-                System.out.println(location);
                 locations.put(id, location);
 
                 if(tokens.length == 4) {
@@ -49,14 +49,17 @@ public class MazeMaker {
                         case POWER_PELLET:
                             pellets.add(location);
                             break;
+                        case GHOST:
+                            ghosts.add(location);
+                            break;
                         default:
                             System.err.println("Unrecognized token: " +
-                                    tokens[2]);
+                                    tokens[3]);
                     }
                 }
             }
 
-            Maze maze = new Maze(rows, cols, pacman, pellets);
+            Maze maze = new Maze(rows, cols, pacman, pellets, ghosts);
             for(Location location : locations.values()) {
                 maze.addValue(location);
             }

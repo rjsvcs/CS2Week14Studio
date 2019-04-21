@@ -13,12 +13,7 @@ import java.io.*;
 import java.util.List;
 
 public class PacManGUI extends Application {
-    private static final char WALL = 'w';
-    private static final char BACKGROUND = 'b';
-    private static final char PATHWAY = '=';
-    private static final char INTERSECTION = 'o';
-
-
+    private String mazeFilename;
     private Maze maze;
     private MazeCell[][] mazeCells;
     private GridPane mazePane;
@@ -33,37 +28,12 @@ public class PacManGUI extends Application {
             System.exit(1);
         }
 
-        loadMaze(params.get(0));
+        mazeFilename = params.get(0);
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-        int rows = maze.getRows();
-        int cols = maze.getCols();
-
-        mazeCells = new MazeCell[rows][cols];
-        mazePane = new GridPane();
-
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
-                MazeCell cell = new MazeCell();
-                mazeCells[row][col] = cell;
-                mazePane.add(cell, col, row);
-            }
-        }
-
-        Location pacMan = maze.getPacMan();
-        mazeCells[pacMan.getRow()][pacMan.getCol()].setPacMan(true);
-
-        for (Edge<Location> edge : maze.getEdges()) {
-            Location origin = edge.getFromValue();
-            Location destination = edge.getToValue();
-            List<Location> pathway = origin.getPath(destination);
-
-            for (Location path : pathway) {
-                mazeCells[path.getRow()][path.getCol()].setPathway();
-            }
-        }
+        loadMaze();
 
         stage.setTitle("Pac-Man!");
         stage.setScene(new Scene(mazePane));
@@ -76,7 +46,41 @@ public class PacManGUI extends Application {
         System.exit(0);
     }
 
-    private void loadMaze(String filename) throws IOException{
-        maze = MazeMaker.readMaze(new FileInputStream(filename));
+    private void loadMaze() throws IOException{
+        maze = MazeMaker.readMaze(new FileInputStream(mazeFilename));
+
+        int rows = maze.getRows();
+        int cols = maze.getCols();
+
+        mazeCells = new MazeCell[rows][cols];
+        mazePane = new GridPane();
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                Location location = new Location(row, col);
+                MazeCell cell = new MazeCell();
+                mazeCells[row][col] = cell;
+                mazePane.add(cell, col, row);
+
+                if(maze.isPacManLocation(location)) {
+                    mazeCells[row][col].setPacMan();
+                } else if(maze.isGhostLocation(location)) {
+                    mazeCells[row][col].setGhost();
+                } else if(maze.isPowerPelletLocation(location)) {
+                    System.out.println("power pellet");
+                    mazeCells[row][col].setPowerPellet();
+                }
+            }
+        }
+
+        for (Edge<Location> edge : maze.getEdges()) {
+            Location origin = edge.getFromValue();
+            Location destination = edge.getToValue();
+            List<Location> pathway = origin.getPath(destination);
+
+            for (Location path : pathway) {
+                mazeCells[path.getRow()][path.getCol()].setPathway();
+            }
+        }
     }
 }

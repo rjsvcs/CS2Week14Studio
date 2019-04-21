@@ -8,7 +8,7 @@ public class Location {
     private final int row;
     private final int col;
 
-    Location(int row, int col) {
+    public Location(int row, int col) {
         this.row = row;
         this.col = col;
     }
