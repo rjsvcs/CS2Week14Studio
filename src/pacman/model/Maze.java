@@ -2,13 +2,22 @@ package pacman.model;
 
 import graphs.Graph;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 public class Maze extends Graph<Location> {
-    private Location pacman;
+    public enum CellType {
+        WALL,
+        PATHWAY,
+        POWER_PELLET,
+        GHOST,
+        PACMAN
+    }
+
+    private Location pacMan;
     private final Set<Location> pellets;
     private final Set<Location> ghosts;
+    private final Set<Location> pathways;
 
     private final int rows;
     private final int cols;
@@ -17,30 +26,31 @@ public class Maze extends Graph<Location> {
                 Set<Location> pellets, Set<Location> ghosts) {
         this.rows = rows;
         this.cols = cols;
-        this.pacman = pacman;
+        this.pacMan = pacman;
         this.pellets = pellets;
         this.ghosts = ghosts;
-        System.out.println(pellets);
+
+        pathways = new HashSet<>();
     }
 
-    public Location getPacMan() {
-        return pacman;
+    @Override
+    public void connectUndirected(Location fromValue, Location toValue, int weight) {
+        super.connectUndirected(fromValue, toValue, weight);
+        pathways.addAll(fromValue.getPath(toValue));
     }
 
-    public boolean isGhostLocation(Location location) {
-        return ghosts.contains(location);
-    }
-
-    public boolean isPowerPelletLocation(Location location) {
-        if(location.getRow() == 5 && location.getCol() == 16) {
-            System.out.println(pellets.contains(location));
+    public CellType getCellType(Location location) {
+        if(location.equals(pacMan)) {
+            return CellType.PACMAN;
+        } else if(ghosts.contains(location)) {
+            return CellType.GHOST;
+        } else if(pellets.contains(location)) {
+            return CellType.POWER_PELLET;
+        } else if(pathways.contains(location)) {
+            return CellType.PATHWAY;
+        } else {
+            return CellType.WALL;
         }
-
-        return pellets.contains(location);
-    }
-
-    public boolean isPacManLocation(Location location) {
-        return location.equals(pacman);
     }
 
     public int getRows() {
@@ -49,13 +59,5 @@ public class Maze extends Graph<Location> {
 
     public int getCols() {
         return cols;
-    }
-
-    void movePacMan(Location destination) {
-
-    }
-
-    public List<Location> getPath() {
-        return null;
     }
 }

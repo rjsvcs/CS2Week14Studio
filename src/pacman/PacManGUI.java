@@ -3,6 +3,7 @@ package pacman;
 import graphs.Edge;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import pacman.model.Location;
@@ -12,7 +13,7 @@ import pacman.model.MazeMaker;
 import java.io.*;
 import java.util.List;
 
-public class PacManGUI extends Application {
+public class PacManGUI extends Application implements Images {
     private String mazeFilename;
     private Maze maze;
     private MazeCell[][] mazeCells;
@@ -29,6 +30,8 @@ public class PacManGUI extends Application {
         }
 
         mazeFilename = params.get(0);
+
+        mazePane = new GridPane();
     }
 
     @Override
@@ -53,33 +56,32 @@ public class PacManGUI extends Application {
         int cols = maze.getCols();
 
         mazeCells = new MazeCell[rows][cols];
-        mazePane = new GridPane();
+
+        mazePane.getChildren().clear();
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
-                Location location = new Location(row, col);
-                MazeCell cell = new MazeCell();
+                MazeCell cell;
+                switch(maze.getCellType(new Location(row, col))) {
+                    case PACMAN:
+                        cell = new MazeCell(PATHWAY, EMPTY, PAC_MAN_RIGHT);
+                        break;
+                    case POWER_PELLET:
+                        cell = new MazeCell(PATHWAY, POWER_PELLET, EMPTY);
+                        break;
+                    case GHOST:
+                        cell = new MazeCell(PATHWAY, PELLETS, GHOST);
+                        break;
+                    case PATHWAY:
+                        cell = new MazeCell(PATHWAY, PELLETS, EMPTY);
+                        break;
+                    case WALL:
+                    default:
+                        cell = new MazeCell(WALL, EMPTY, EMPTY);
+                        break;
+                }
                 mazeCells[row][col] = cell;
                 mazePane.add(cell, col, row);
-
-                if(maze.isPacManLocation(location)) {
-                    mazeCells[row][col].setPacMan();
-                } else if(maze.isGhostLocation(location)) {
-                    mazeCells[row][col].setGhost();
-                } else if(maze.isPowerPelletLocation(location)) {
-                    System.out.println("power pellet");
-                    mazeCells[row][col].setPowerPellet();
-                }
-            }
-        }
-
-        for (Edge<Location> edge : maze.getEdges()) {
-            Location origin = edge.getFromValue();
-            Location destination = edge.getToValue();
-            List<Location> pathway = origin.getPath(destination);
-
-            for (Location path : pathway) {
-                mazeCells[path.getRow()][path.getCol()].setPathway();
             }
         }
     }
