@@ -1,10 +1,13 @@
 package pacman;
 
-import graphs.Edge;
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
+import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import pacman.model.Location;
 import pacman.model.Maze;
@@ -36,11 +39,25 @@ public class PacManGUI extends Application implements Images {
 
     @Override
     public void start(Stage stage) throws Exception {
-        loadMaze();
+        try {
+            loadMaze();
 
-        stage.setTitle("Pac-Man!");
-        stage.setScene(new Scene(mazePane));
-        stage.show();
+            BorderPane main = new BorderPane();
+            main.setCenter(mazePane);
+
+            Button move = new Button("Move Pac-Man!");
+            move.setFont(new Font("Courier New", 24));
+            move.setAlignment(Pos.CENTER);
+            move.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+            move.setPadding(new Insets(10));
+            main.setBottom(move);
+
+            stage.setTitle("Pac-Man!");
+            stage.setScene(new Scene(main));
+            stage.show();
+        }catch(Throwable thrown) {
+            thrown.printStackTrace();
+        }
     }
 
     @Override
@@ -84,5 +101,9 @@ public class PacManGUI extends Application implements Images {
                 mazePane.add(cell, col, row);
             }
         }
+    }
+
+    private void move() {
+
     }
 }

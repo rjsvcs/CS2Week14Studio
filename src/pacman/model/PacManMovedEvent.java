@@ -12,6 +12,10 @@ public class PacManMovedEvent extends MazeEvent {
     }
 
     public Location getOrigin() {
-        return null;
+        return origin;
+    }
+
+    public Location getDestination() {
+        return destination;
     }
 }
