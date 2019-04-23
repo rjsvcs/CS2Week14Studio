@@ -102,6 +102,61 @@ public class Graph<T> {
     }
 
     /**
+     * An implementation of Dijkstra's Shortest Path algorithm. Determines the
+     * shortest/lowest cost path from the start value to the end value through
+     * the graph.
+     *
+     * @param startValue The start value.
+     * @param endValue The end value.
+     * @return The values in the path, if it exists. An empty list, otherwise.
+     */
+    public List<T> dijkstrasShortestPath(T startValue, T endValue) {
+        List<T> path = new LinkedList<>();
+
+        Vertex<T> start = vertices.get(startValue);
+        Vertex<T> end = vertices.get(endValue);
+
+        // set up map and priority queue of path tuples
+        Map<Vertex<T>, PathTuple<T>> predecessors = new HashMap<>();
+        PriorityQueue<PathTuple<T>> pq = new PriorityQueue<>();
+
+        for(Vertex<T> vertex : vertices.values()) {
+            PathTuple<T> tuple = new PathTuple<>(vertex);
+            predecessors.put(vertex, tuple);
+            pq.enqueue(tuple);
+        }
+
+        PathTuple<T> startTuple = predecessors.get(start);
+        startTuple.update(null, 0);
+
+        // the main loop
+        while(!pq.isEmpty()) {
+            PathTuple<T> closest = pq.dequeue();
+            if(closest.getDistanceFromStart() == Integer.MAX_VALUE) {
+                break;
+            }
+            Vertex<T> vertex = closest.getVertex();
+            for(Edge<T> edge : vertex.getNeighbors()) {
+                Vertex<T> neighbor = edge.getTo();
+                int distanceThroughV = closest.getDistanceFromStart() +
+                        edge.getWeight();
+                predecessors.get(neighbor).update(vertex, distanceThroughV);
+            }
+        }
+
+        // construct the path
+        PathTuple<T> next = predecessors.get(end);
+        if(next.getPredecessor() != null) {
+            while (next != null) {
+                path.add(0, next.getVertex().getValue());
+                next = predecessors.get(next.getPredecessor());
+            }
+        }
+
+        return path;
+    }
+
+    /**
      * Determines whether a path exists between the two values in the graph.
      *
      * @param startValue The value from which to start searching.
