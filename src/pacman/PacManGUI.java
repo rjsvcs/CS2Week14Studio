@@ -6,11 +6,13 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import pacman.model.Location;
 import pacman.model.Maze;
+import pacman.model.Maze.MovementType;
 import pacman.model.MazeMaker;
 import pacman.model.PacManMoveEvent;
 
@@ -40,26 +42,39 @@ public class PacManGUI extends Application implements Images {
 
     @Override
     public void start(Stage stage) throws Exception {
-        try {
-            loadMaze();
+        loadMaze();
 
-            BorderPane main = new BorderPane();
-            main.setCenter(mazePane);
+        BorderPane main = new BorderPane();
+        main.setCenter(mazePane);
 
-            Button move = new Button("Move Pac-Man!");
-            move.setFont(new Font("Courier New", 24));
-            move.setAlignment(Pos.CENTER);
-            move.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-            move.setPadding(new Insets(10));
-            move.setOnAction(e -> movePacMan());
-            main.setBottom(move);
+        Button moveBFS = makeButton("Use BFS!");
+        moveBFS.setOnAction(e -> maze.movePacMan(MovementType.BFS));
 
-            stage.setTitle("Pac-Man!");
-            stage.setScene(new Scene(main));
-            stage.show();
-        }catch(Throwable thrown) {
-            thrown.printStackTrace();
-        }
+        Button moveDijkstra = makeButton("Use Dijkstra!");
+        moveDijkstra.setOnAction(e -> maze.movePacMan(MovementType.DIJKSTRA));
+
+        GridPane bottom = new GridPane();
+        bottom.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        bottom.add(moveBFS, 0, 0);
+        bottom.add(moveDijkstra, 1, 0);
+        ColumnConstraints constraints = new ColumnConstraints();
+        constraints.setPercentWidth(50);
+        bottom.getColumnConstraints().addAll(constraints, constraints);
+
+        main.setBottom(bottom);
+
+        stage.setTitle("Pac-Man!");
+        stage.setScene(new Scene(main));
+        stage.show();
+    }
+
+    private Button makeButton(String label) {
+        Button button = new Button(label);
+        button.setFont(new Font("Courier New", 14));
+        button.setAlignment(Pos.CENTER);
+        button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        button.setPadding(new Insets(10));
+        return button;
     }
 
     @Override
@@ -86,10 +101,6 @@ public class PacManGUI extends Application implements Images {
                 mazePane.add(cell, col, row);
             }
         }
-    }
-
-    private void movePacMan() {
-        maze.movePacMan();
     }
 
     private void pacManMoved(PacManMoveEvent event) {

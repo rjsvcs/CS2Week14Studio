@@ -110,9 +110,7 @@ public class Graph<T> {
      * @param endValue The end value.
      * @return The values in the path, if it exists. An empty list, otherwise.
      */
-    public List<T> dijkstrasShortestPath(T startValue, T endValue) {
-        List<T> path = new LinkedList<>();
-
+    public Path<T> dijkstrasShortestPath(T startValue, T endValue) {
         Vertex<T> start = vertices.get(startValue);
         Vertex<T> end = vertices.get(endValue);
 
@@ -146,6 +144,7 @@ public class Graph<T> {
 
         // construct the path
         PathTuple<T> next = predecessors.get(end);
+        Path<T> path = new Path<>(next.getDistanceFromStart());
         if(next.getPredecessor() != null) {
             while (next != null) {
                 path.add(0, next.getVertex().getValue());

@@ -21,6 +21,12 @@ public class Maze extends Graph<Location> {
         PACMAN
     }
 
+    public enum MovementType {
+        BFS,
+        DFS,
+        DIJKSTRA
+    }
+
     /**
      * The location of Pac-Man in the maze.
      */
@@ -73,6 +79,8 @@ public class Maze extends Graph<Location> {
 
     @Override
     public void connectUndirected(Location fromValue, Location toValue, int weight) {
+        weight = ghosts.contains(fromValue) || ghosts.contains(toValue) ?
+                1000 : 1;
         super.connectUndirected(fromValue, toValue, weight);
         pathways.addAll(fromValue.getPath(toValue));
     }
@@ -103,14 +111,29 @@ public class Maze extends Graph<Location> {
         return cols;
     }
 
-    public void movePacMan() {
+    public void movePacMan(MovementType type) {
         int shortest = Integer.MAX_VALUE;
         Path path = null;
 
+
+
         for(Location pellet : pellets) {
-            Path candidate = getPath(pacMan, pellet);
-            if(candidate.length() < shortest) {
-                path = candidate;
+            List<Location> candidate;
+            switch(type) {
+                case DIJKSTRA:
+                    candidate = dijkstrasShortestPath(pacMan, pellet);
+                    break;
+                case DFS:
+                    candidate = depthFirstPath(pacMan, pellet);
+                    break;
+                case BFS:
+                default:
+                    candidate = breadthFirstPath(pacMan, pellet);
+                    break;
+            }
+
+            if(candidate.size() < shortest) {
+                path = new Path(candidate);
             }
         }
 
@@ -125,8 +148,9 @@ public class Maze extends Graph<Location> {
     }
 
     private Path getPath(Location start, Location end) {
-        List<Location> path = breadthFirstPath(start, end);
+        //List<Location> path = breadthFirstPath(start, end);
         //List<Location> path = depthFirstPath(start, end);
+        List<Location> path = dijkstrasShortestPath(start, end);
 
         return new Path(path);
     }
