@@ -2,6 +2,7 @@ package pacman.model;
 
 import graphs.Graph;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -112,18 +113,16 @@ public class Maze extends Graph<Location> {
 
     public void movePacMan(PathFinder finder) {
         int shortest = Integer.MAX_VALUE;
-        Path path = null;
-
-        for(Location pellet : pellets) {
-            List<Location> candidate =
-                    finder.findPath(pacMan.getLocation(), pellet);
-            if(candidate.size() > 0 && candidate.size() < shortest) {
-                path = new Path(candidate);
-            }
-        }
+        Path path = findPath(pacMan.getLocation(), pellets, finder);
 
         if(path != null) {
             pacMan.setLocation(path.getNext());
+
+            if(pellets.contains(pacMan.getLocation())) {
+                pellets.remove(pacMan.getLocation());
+                pacMan.setPoweredUp();
+            }
+
             PacManEvent event = new PacManEvent(this, pacMan, path.getStart(),
                     path.getNext());
             for(Observer<PacManEvent> observer : moveObservers) {
@@ -132,11 +131,19 @@ public class Maze extends Graph<Location> {
         }
     }
 
-    private Path getPath(Location start, Location end) {
-        //List<Location> path = breadthFirstPath(start, end);
-        //List<Location> path = depthFirstPath(start, end);
-        List<Location> path = dijkstrasShortestPath(start, end);
+    private Path findPath(Location start,
+                                    Collection<Location> locations,
+                                    PathFinder finder) {
+        int shortest = Integer.MAX_VALUE;
+        Path path = null;
 
-        return new Path(path);
+        for(Location target : locations) {
+            List<Location> candidate = finder.findPath(start, target);
+            if(candidate.size() > 0 && candidate.size() < shortest) {
+                path = new Path(candidate);
+            }
+        }
+
+        return path;
     }
 }

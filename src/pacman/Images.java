@@ -51,7 +51,7 @@ public interface Images {
     /**
      * Pac-Man, mouth open, facing left.
      */
-    Image PAC_MAN_LEFT = new Image(IMAGE_PATH + "pac_right.png");
+    Image PAC_MAN_LEFT = new Image(IMAGE_PATH + "pac_left.png");
 
     /**
      * An enemy ghost.
