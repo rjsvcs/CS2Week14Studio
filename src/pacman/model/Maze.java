@@ -35,7 +35,7 @@ public class Maze extends Graph<Location> {
     /**
      * The locations of all of the ghosts in the maze.
      */
-    private final Set<Location> ghosts;
+    private final Set<Ghost> ghosts;
 
     /**
      * The locations of all of the pathways in the maze.
@@ -56,12 +56,15 @@ public class Maze extends Graph<Location> {
 
 
     public Maze(int rows, int cols, Location pacManLocation,
-                Set<Location> pellets, Set<Location> ghosts) {
+                Set<Location> pellets, Set<Location> ghostLocations) {
         this.rows = rows;
         this.cols = cols;
         this.pacMan = new PacMan(pacManLocation);
         this.pellets = pellets;
-        this.ghosts = ghosts;
+        this.ghosts = new HashSet<>();
+        for(Location location : ghostLocations) {
+            ghosts.add(new Ghost(location));
+        }
 
         pathways = new HashSet<>();
 
@@ -127,6 +130,33 @@ public class Maze extends Graph<Location> {
                     path.getNext());
             for(Observer<PacManEvent> observer : moveObservers) {
                 observer.handle(event);
+            }
+        }
+
+        if(pacMan.isPoweredUp()) {
+            // move ghosts randomly
+            for(Ghost ghost : ghosts) {
+                if(ghost.getLocation().equals(pacMan.getLocation())) {
+                    // ghost is dead
+
+                } else {
+
+                }
+            }
+        } else {
+            // move ghosts towards Pac-Man
+            for(Ghost ghost : ghosts) {
+                if(ghost.getLocation().equals(pacMan.getLocation()))  {
+                    // Pac-Man is dead
+                    pacMan.setDead();
+                } else {
+                    List<Location> pathToPacMan =
+                            breadthFirstPath(ghost.getLocation(),
+                            pacMan.getLocation());
+                    if(pathToPacMan != null && pathToPacMan.size() > 0) {
+                        ghost.setLocation(pathToPacMan.get(0));
+                    }
+                }
             }
         }
     }
