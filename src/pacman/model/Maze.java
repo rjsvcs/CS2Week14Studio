@@ -77,6 +77,10 @@ public class Maze extends Graph<Location> {
         pathways.addAll(fromValue.getPath(toValue));
     }
 
+    public CellType getCellType(int row, int col) {
+        return getCellType(new Location(row, col));
+    }
+
     public CellType getCellType(Location location) {
         if(location.equals(pacMan)) {
             return CellType.PACMAN;

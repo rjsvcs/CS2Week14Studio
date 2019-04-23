@@ -5,7 +5,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
@@ -82,25 +81,7 @@ public class PacManGUI extends Application implements Images {
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
-                MazeCell cell;
-                switch(maze.getCellType(new Location(row, col))) {
-                    case PACMAN:
-                        cell = new MazeCell(PATHWAY, EMPTY, PAC_MAN_RIGHT);
-                        break;
-                    case POWER_PELLET:
-                        cell = new MazeCell(PATHWAY, POWER_PELLET, EMPTY);
-                        break;
-                    case GHOST:
-                        cell = new MazeCell(PATHWAY, PELLETS, GHOST);
-                        break;
-                    case PATHWAY:
-                        cell = new MazeCell(PATHWAY, PELLETS, EMPTY);
-                        break;
-                    case WALL:
-                    default:
-                        cell = new MazeCell(WALL, EMPTY, EMPTY);
-                        break;
-                }
+                MazeCell cell = new MazeCell(maze.getCellType(row, col));
                 mazeCells[row][col] = cell;
                 mazePane.add(cell, col, row);
             }
@@ -114,8 +95,8 @@ public class PacManGUI extends Application implements Images {
     private void pacManMoved(PacManMoveEvent event) {
         Location origin = event.getOrigin();
         Location dest = event.getDestination();
-        mazeCells[origin.getRow()][origin.getCol()].setForeground(EMPTY);
-        mazeCells[dest.getRow()][dest.getCol()].setForeground(PAC_MAN_RIGHT);
+        mazeCells[origin.getRow()][origin.getCol()].clearPacMan();
+        mazeCells[dest.getRow()][dest.getCol()].setPacMan();
 
         List<Location> pathways = origin.getPath(dest);
         for(Location pathway : pathways) {
