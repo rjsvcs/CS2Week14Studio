@@ -116,5 +116,10 @@ public class PacManGUI extends Application implements Images {
         Location dest = event.getDestination();
         mazeCells[origin.getRow()][origin.getCol()].setForeground(EMPTY);
         mazeCells[dest.getRow()][dest.getCol()].setForeground(PAC_MAN_RIGHT);
+
+        List<Location> pathways = origin.getPath(dest);
+        for(Location pathway : pathways) {
+            mazeCells[pathway.getRow()][pathway.getCol()].clearDecoration();
+        }
     }
 }

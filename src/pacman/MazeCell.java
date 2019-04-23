@@ -49,4 +49,8 @@ public class MazeCell extends StackPane implements Images {
     public void setForeground(Image image) {
         foreground.setImage(image);
     }
+
+    public void clearDecoration() {
+        middleGround.setImage(EMPTY);
+    }
 }
