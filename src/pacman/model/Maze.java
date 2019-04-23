@@ -24,7 +24,7 @@ public class Maze extends Graph<Location> {
     /**
      * The location of Pac-Man in the maze.
      */
-    private Location pacMan;
+    private PacMan pacMan;
 
     /**
      * The locations of all of the power pellets in the maze.
@@ -51,14 +51,14 @@ public class Maze extends Graph<Location> {
      */
     private final int cols;
 
-    private final Set<Observer<PacManMoveEvent>> moveObservers;
+    private final Set<Observer<PacManEvent>> moveObservers;
 
 
-    public Maze(int rows, int cols, Location pacman,
+    public Maze(int rows, int cols, Location pacManLocation,
                 Set<Location> pellets, Set<Location> ghosts) {
         this.rows = rows;
         this.cols = cols;
-        this.pacMan = pacman;
+        this.pacMan = new PacMan(pacManLocation);
         this.pellets = pellets;
         this.ghosts = ghosts;
 
@@ -67,7 +67,7 @@ public class Maze extends Graph<Location> {
         moveObservers = new HashSet<>();
     }
 
-    public void registerPacManMoveObserver(Observer<PacManMoveEvent> observer) {
+    public void registerPacManObserver(Observer<PacManEvent> observer) {
         moveObservers.add(observer);
     }
 
@@ -89,7 +89,7 @@ public class Maze extends Graph<Location> {
     }
 
     public CellType getCellType(Location location) {
-        if(location.equals(pacMan)) {
+        if(location.equals(pacMan.getLocation())) {
             return CellType.PACMAN;
         } else if(ghosts.contains(location)) {
             return CellType.GHOST;
@@ -115,17 +115,18 @@ public class Maze extends Graph<Location> {
         Path path = null;
 
         for(Location pellet : pellets) {
-            List<Location> candidate = finder.findPath(pacMan, pellet);
-            if(candidate.size() < shortest) {
+            List<Location> candidate =
+                    finder.findPath(pacMan.getLocation(), pellet);
+            if(candidate.size() > 0 && candidate.size() < shortest) {
                 path = new Path(candidate);
             }
         }
 
         if(path != null) {
-            pacMan = path.getNext();
-            PacManMoveEvent event = new PacManMoveEvent(this, path.getStart(),
+            pacMan.setLocation(path.getNext());
+            PacManEvent event = new PacManEvent(this, path.getStart(),
                     path.getNext());
-            for(Observer<PacManMoveEvent> observer : moveObservers) {
+            for(Observer<PacManEvent> observer : moveObservers) {
                 observer.handle(event);
             }
         }

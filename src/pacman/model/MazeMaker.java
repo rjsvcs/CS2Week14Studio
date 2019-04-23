@@ -9,12 +9,39 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Utility class for loading a {@link Maze} from a file.
+ */
 public class MazeMaker {
+    /**
+     * A separator that indicates the ends of the maze vertices and the
+     * beginning of the maze edges in the file.
+     */
     private static final String PATHWAYS = "##PATHWAYS##";
+
+    /**
+     * Indicates that Pac-Man is located at the specified vertex.
+     */
     private static final String PACMAN = "PM";
+
+    /**
+     * Indicates that a Power Pellet is located at the specified vertex.
+     */
     private static final String POWER_PELLET = "PP";
+
+    /**
+     * Indicates that a Ghost is located at the specified vertex.
+     */
     private static final String GHOST = "G";
 
+    /**
+     * Reads a new {@link Maze} using the data contained in the specified
+     * {@link InputStream}.
+     *
+     * @param in The {@link InputStream} that contains the maze data.
+     * @return The new {@link Maze}
+     * @throws IOException If there is an error reading the maze data.
+     */
     public static Maze readMaze(InputStream in) throws IOException {
         try(InputStreamReader inr = new InputStreamReader(in);
             BufferedReader reader = new BufferedReader(inr)) {
@@ -36,7 +63,6 @@ public class MazeMaker {
 
                 String[] tokens = line.split(" ");
                 int id = Integer.parseInt(tokens[0]);
-                System.out.println("id = " + id);
                 int row = Integer.parseInt(tokens[1]);
                 int col = Integer.parseInt(tokens[2]);
                 Location location = new Location(row, col);

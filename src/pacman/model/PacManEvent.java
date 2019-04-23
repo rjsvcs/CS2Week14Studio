@@ -1,11 +1,11 @@
 package pacman.model;
 
-public class PacManMoveEvent extends MazeEvent {
+public class PacManEvent extends MazeEvent {
     private final Location origin;
     private final Location destination;
 
-    public PacManMoveEvent(Maze source, Location origin,
-                           Location destination) {
+    public PacManEvent(Maze source, Location origin,
+                       Location destination) {
         super(source);
         this.origin = origin;
         this.destination = destination;

@@ -8,14 +8,12 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import pacman.model.Location;
 import pacman.model.Maze;
 import pacman.model.MazeMaker;
-import pacman.model.PacManMoveEvent;
+import pacman.model.PacManEvent;
 
 import java.io.*;
 import java.util.List;
@@ -96,7 +94,7 @@ public class PacManGUI extends Application implements Images {
 
     private void loadMaze() throws IOException{
         maze = MazeMaker.readMaze(new FileInputStream(mazeFilename));
-        maze.registerPacManMoveObserver(this::pacManMoved);
+        maze.registerPacManObserver(this::pacManChanged);
 
         int rows = maze.getRows();
         int cols = maze.getCols();
@@ -114,7 +112,7 @@ public class PacManGUI extends Application implements Images {
         }
     }
 
-    private void pacManMoved(PacManMoveEvent event) {
+    private void pacManChanged(PacManEvent event) {
         Location origin = event.getOrigin();
         Location dest = event.getDestination();
         mazeCells[origin.getRow()][origin.getCol()].clearPacMan();
