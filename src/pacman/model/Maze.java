@@ -122,6 +122,7 @@ public class Maze extends Graph<Location> {
 
     private Path getPath(Location start, Location end) {
         List<Location> path = breadthFirstPath(start, end);
+        //List<Location> path = depthFirstPath(start, end);
 
         return new Path(path);
     }
