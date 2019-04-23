@@ -3,7 +3,7 @@ package graphs;
 /**
  * Demonstrates Dijkstra's Shortest Path using the examples from lecture.
  */
-public class DijkstraTest {
+public class DijkstraExamples {
     /**
      * Creates and runs several of the examples form lecture.
      *
