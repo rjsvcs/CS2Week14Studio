@@ -51,6 +51,9 @@ public class Maze extends Graph<Location> {
      */
     private final int cols;
 
+    private final Set<Observer<PacManMoveEvent>> moveObservers;
+
+
     public Maze(int rows, int cols, Location pacman,
                 Set<Location> pellets, Set<Location> ghosts) {
         this.rows = rows;
@@ -60,6 +63,12 @@ public class Maze extends Graph<Location> {
         this.ghosts = ghosts;
 
         pathways = new HashSet<>();
+
+        moveObservers = new HashSet<>();
+    }
+
+    public void registerPacManMoveObserver(Observer<PacManMoveEvent> observer) {
+        moveObservers.add(observer);
     }
 
     @Override
@@ -91,7 +100,24 @@ public class Maze extends Graph<Location> {
     }
 
     public void movePacMan() {
+        int shortest = Integer.MAX_VALUE;
+        Path path = null;
 
+        for(Location pellet : pellets) {
+            Path candidate = getPath(pacMan, pellet);
+            if(candidate.length() < shortest) {
+                path = candidate;
+            }
+        }
+
+        if(path != null) {
+            pacMan = path.getNext();
+            PacManMoveEvent event = new PacManMoveEvent(this, path.getStart(),
+                    path.getNext());
+            for(Observer<PacManMoveEvent> observer : moveObservers) {
+                observer.handle(event);
+            }
+        }
     }
 
     private Path getPath(Location start, Location end) {

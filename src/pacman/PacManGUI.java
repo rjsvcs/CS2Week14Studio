@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
@@ -12,6 +13,7 @@ import javafx.stage.Stage;
 import pacman.model.Location;
 import pacman.model.Maze;
 import pacman.model.MazeMaker;
+import pacman.model.PacManMoveEvent;
 
 import java.io.*;
 import java.util.List;
@@ -50,6 +52,7 @@ public class PacManGUI extends Application implements Images {
             move.setAlignment(Pos.CENTER);
             move.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
             move.setPadding(new Insets(10));
+            move.setOnAction(e -> movePacMan());
             main.setBottom(move);
 
             stage.setTitle("Pac-Man!");
@@ -68,6 +71,7 @@ public class PacManGUI extends Application implements Images {
 
     private void loadMaze() throws IOException{
         maze = MazeMaker.readMaze(new FileInputStream(mazeFilename));
+        maze.registerPacManMoveObserver(this::pacManMoved);
 
         int rows = maze.getRows();
         int cols = maze.getCols();
@@ -103,7 +107,14 @@ public class PacManGUI extends Application implements Images {
         }
     }
 
-    private void move() {
+    private void movePacMan() {
+        maze.movePacMan();
+    }
 
+    private void pacManMoved(PacManMoveEvent event) {
+        Location origin = event.getOrigin();
+        Location dest = event.getDestination();
+        mazeCells[origin.getRow()][origin.getCol()].setForeground(EMPTY);
+        mazeCells[dest.getRow()][dest.getCol()].setForeground(PAC_MAN_RIGHT);
     }
 }
