@@ -4,7 +4,7 @@ package graphs;
  * A path tuple that holds the current, known shortest distance to a vertex
  * and its predecessor.
  */
-public class PathTuple<T> {
+public class PathTuple<T> implements Comparable<PathTuple> {
     /**
      * The shortest known distance to the vertex associated with this path
      * tuple.
@@ -88,5 +88,21 @@ public class PathTuple<T> {
      */
     public Vertex<T> getPredecessor() {
         return predecessor;
+    }
+
+    /**
+     * Compares this path tuple to another path tuple based on the relative
+     * distance from start.
+     *
+     * @param tuple The path tuple to which this path tuple is being compared.
+     *
+     * @return A negative value if the vertex associated with this path tuple
+     * is closer to the start than the vertex associated with the other path
+     * tuple, 0 if they are the same distance, and a positive number if the
+     * other vertex is closer.
+     */
+    @Override
+    public int compareTo(PathTuple tuple) {
+        return distanceFromStart - tuple.distanceFromStart;
     }
 }
