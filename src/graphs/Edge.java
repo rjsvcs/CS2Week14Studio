@@ -6,7 +6,6 @@ import java.util.Objects;
  * A weighted edge on a graph.
  *
  * @param <T> The type parameter for the values stored by the vertices.
- * @param <W> The type parameter for the edge weights.
  */
 public class Edge<T> {
     /**
