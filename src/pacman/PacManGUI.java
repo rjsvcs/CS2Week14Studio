@@ -8,11 +8,12 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import pacman.model.Location;
 import pacman.model.Maze;
-import pacman.model.Maze.MovementType;
 import pacman.model.MazeMaker;
 import pacman.model.PacManMoveEvent;
 
@@ -42,30 +43,40 @@ public class PacManGUI extends Application implements Images {
 
     @Override
     public void start(Stage stage) throws Exception {
-        loadMaze();
+        try {
+            loadMaze();
 
-        BorderPane main = new BorderPane();
-        main.setCenter(mazePane);
+            BorderPane main = new BorderPane();
+            main.setCenter(mazePane);
 
-        Button moveBFS = makeButton("Use BFS!");
-        moveBFS.setOnAction(e -> maze.movePacMan(MovementType.BFS));
+            Button moveBFS = makeButton("Use BFS!");
+            moveBFS.setOnAction(e -> {
+                maze.movePacMan(maze::breadthFirstPath);
+            });
 
-        Button moveDijkstra = makeButton("Use Dijkstra!");
-        moveDijkstra.setOnAction(e -> maze.movePacMan(MovementType.DIJKSTRA));
+            Button moveDijkstra = makeButton("Use Dijkstra!");
+            moveDijkstra.setOnAction(
+                    e -> maze.movePacMan(maze::dijkstrasShortestPath));
 
-        GridPane bottom = new GridPane();
-        bottom.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        bottom.add(moveBFS, 0, 0);
-        bottom.add(moveDijkstra, 1, 0);
-        ColumnConstraints constraints = new ColumnConstraints();
-        constraints.setPercentWidth(50);
-        bottom.getColumnConstraints().addAll(constraints, constraints);
+            GridPane bottom = new GridPane();
+            bottom.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+            bottom.add(moveBFS, 0, 0);
+            bottom.add(moveDijkstra, 1, 0);
+            ColumnConstraints constraints = new ColumnConstraints();
+            constraints.setPercentWidth(50);
+            bottom.getColumnConstraints().addAll(constraints, constraints);
 
-        main.setBottom(bottom);
+            main.setBottom(bottom);
 
-        stage.setTitle("Pac-Man!");
-        stage.setScene(new Scene(main));
-        stage.show();
+            stage.setTitle("Pac-Man!");
+            stage.setScene(new Scene(main));
+            stage.show();
+
+            SoundBoard.play(SoundBoard.START);
+        } catch(Throwable thrown) {
+            thrown.printStackTrace();
+            System.exit(1);
+        }
     }
 
     private Button makeButton(String label) {
@@ -111,7 +122,12 @@ public class PacManGUI extends Application implements Images {
 
         List<Location> pathways = origin.getPath(dest);
         for(Location pathway : pathways) {
-            mazeCells[pathway.getRow()][pathway.getCol()].clearDecoration();
+            MazeCell cell = mazeCells[pathway.getRow()][pathway.getCol()];
+            if(cell.isDecorated()) {
+                cell.clearDecoration();
+            }
         }
+
+        SoundBoard.play(SoundBoard.CHOMP);
     }
 }

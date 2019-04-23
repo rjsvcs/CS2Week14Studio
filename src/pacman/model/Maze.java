@@ -21,12 +21,6 @@ public class Maze extends Graph<Location> {
         PACMAN
     }
 
-    public enum MovementType {
-        BFS,
-        DFS,
-        DIJKSTRA
-    }
-
     /**
      * The location of Pac-Man in the maze.
      */
@@ -111,27 +105,12 @@ public class Maze extends Graph<Location> {
         return cols;
     }
 
-    public void movePacMan(MovementType type) {
+    public void movePacMan(PathFinder finder) {
         int shortest = Integer.MAX_VALUE;
         Path path = null;
 
-
-
         for(Location pellet : pellets) {
-            List<Location> candidate;
-            switch(type) {
-                case DIJKSTRA:
-                    candidate = dijkstrasShortestPath(pacMan, pellet);
-                    break;
-                case DFS:
-                    candidate = depthFirstPath(pacMan, pellet);
-                    break;
-                case BFS:
-                default:
-                    candidate = breadthFirstPath(pacMan, pellet);
-                    break;
-            }
-
+            List<Location> candidate = finder.findPath(pacMan, pellet);
             if(candidate.size() < shortest) {
                 path = new Path(candidate);
             }

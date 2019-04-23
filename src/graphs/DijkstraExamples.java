@@ -10,10 +10,9 @@ public class DijkstraExamples {
      * @param args Ignored.
      */
     public static void main(String[] args) {
+        // small example graph
         Graph<String> small = new Graph<>();
-
         small.addValues("A", "B", "C", "D", "E", "F", "G");
-
         small.connectUndirected("A", "B", 6);
         small.connectUndirected("A", "C", 1);
         small.connectUndirected("A", "D", 2);
