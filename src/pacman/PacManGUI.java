@@ -94,7 +94,7 @@ public class PacManGUI extends Application implements Images {
 
     private void loadMaze() throws IOException{
         maze = MazeMaker.readMaze(new FileInputStream(mazeFilename));
-        maze.registerPacManObserver(this::pacManChanged);
+        maze.addPacManObserver(this::pacManChanged);
 
         int rows = maze.getRows();
         int cols = maze.getCols();
