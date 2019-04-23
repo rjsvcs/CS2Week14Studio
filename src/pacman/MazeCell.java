@@ -3,6 +3,7 @@ package pacman;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import pacman.model.Maze.CellType;
+import pacman.model.PacMan;
 
 /**
  * A single cell in the maze. May comprise several images stacked one atop the
@@ -24,7 +25,7 @@ public class MazeCell extends StackPane implements Images {
      * The {@link ImageView} that displays Pac-Man (if he is present in the
      * cell).
      */
-    private final ImageView pacMan;
+    private final ImageView pacManView;
 
     /**
      * The {@link ImageView} that displays a ghost (if it is present in the
@@ -41,7 +42,7 @@ public class MazeCell extends StackPane implements Images {
     MazeCell(CellType type) {
         background = new ImageView(WALL);
         decoration = new ImageView(EMPTY);
-        pacMan = new ImageView(EMPTY);
+        pacManView = new ImageView(EMPTY);
         ghost = new ImageView(EMPTY);
 
         switch(type) {
@@ -54,7 +55,7 @@ public class MazeCell extends StackPane implements Images {
             case PACMAN:
                 background.setImage(PATHWAY);
                 decoration.setImage(PELLETS);
-                pacMan.setImage(PAC_MAN_RIGHT);
+                pacManView.setImage(PAC_MAN_RIGHT);
                 break;
             case POWER_PELLET:
                 background.setImage(PATHWAY);
@@ -66,7 +67,7 @@ public class MazeCell extends StackPane implements Images {
 
         }
 
-        getChildren().addAll(background, decoration, ghost, pacMan);
+        getChildren().addAll(background, decoration, ghost, pacManView);
     }
 
     boolean isDecorated() {
@@ -78,11 +79,23 @@ public class MazeCell extends StackPane implements Images {
     }
 
     void clearPacMan() {
-        pacMan.setImage(EMPTY);
+        pacManView.setImage(EMPTY);
     }
 
-    void setPacMan() {
-        pacMan.setImage(PAC_MAN_RIGHT);
+    void setPacManView(PacMan pacMan) {
+        switch(pacMan.getDirection()) {
+            case RIGHT_OPEN:
+                pacManView.setImage(PAC_MAN_RIGHT);
+                break;
+            case LEFT_OPEN:
+                pacManView.setImage(PAC_MAN_LEFT);
+                break;
+            case RIGHT_CLOSED:
+            case LEFT_CLOSED:
+                pacManView.setImage(PAC_MAN_CLOSED);
+                break;
+        }
+
     }
 
     void clearGhost() {

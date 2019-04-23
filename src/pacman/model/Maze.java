@@ -124,7 +124,7 @@ public class Maze extends Graph<Location> {
 
         if(path != null) {
             pacMan.setLocation(path.getNext());
-            PacManEvent event = new PacManEvent(this, path.getStart(),
+            PacManEvent event = new PacManEvent(this, pacMan, path.getStart(),
                     path.getNext());
             for(Observer<PacManEvent> observer : moveObservers) {
                 observer.handle(event);

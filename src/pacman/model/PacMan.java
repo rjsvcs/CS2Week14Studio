@@ -16,7 +16,6 @@ public class PacMan {
 
     private Location location;
     private Direction direction;
-    private boolean closed;
     private boolean poweredUp;
     private boolean alive;
 
@@ -24,7 +23,6 @@ public class PacMan {
     PacMan(Location location) {
         this.location = location;
         direction = Direction.RIGHT_OPEN;
-        closed = false;
         poweredUp = false;
         alive = true;
 
@@ -34,9 +32,23 @@ public class PacMan {
         return location;
     }
 
-    void setLocation(Location newLocation) {
-        closed = !closed;
-        location = newLocation;
+    void setLocation(Location location) {
+        int deltaCol = this.location.getCol() - location.getCol();
+
+        switch(direction) {
+            case RIGHT_OPEN:
+            case LEFT_OPEN:
+                direction = deltaCol <= 0 ?
+                        Direction.RIGHT_CLOSED : Direction.LEFT_CLOSED;
+                break;
+            case RIGHT_CLOSED:
+            case LEFT_CLOSED:
+                direction = deltaCol <= 0 ?
+                    Direction.RIGHT_OPEN : Direction.LEFT_OPEN;
+                break;
+        }
+
+        this.location = location;
     }
 
     public boolean isAlive() {

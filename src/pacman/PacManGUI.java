@@ -116,7 +116,7 @@ public class PacManGUI extends Application implements Images {
         Location origin = event.getOrigin();
         Location dest = event.getDestination();
         mazeCells[origin.getRow()][origin.getCol()].clearPacMan();
-        mazeCells[dest.getRow()][dest.getCol()].setPacMan();
+        mazeCells[dest.getRow()][dest.getCol()].setPacManView(event.getPacMan());
 
         List<Location> pathways = origin.getPath(dest);
         boolean pellets = false;
