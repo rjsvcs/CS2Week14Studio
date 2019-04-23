@@ -121,13 +121,17 @@ public class PacManGUI extends Application implements Images {
         mazeCells[dest.getRow()][dest.getCol()].setPacMan();
 
         List<Location> pathways = origin.getPath(dest);
+        boolean pellets = false;
         for(Location pathway : pathways) {
             MazeCell cell = mazeCells[pathway.getRow()][pathway.getCol()];
             if(cell.isDecorated()) {
                 cell.clearDecoration();
+                pellets = true;
             }
         }
 
-        SoundBoard.play(SoundBoard.CHOMP);
+        if(pellets) {
+            SoundBoard.play(SoundBoard.CHOMP);
+        }
     }
 }

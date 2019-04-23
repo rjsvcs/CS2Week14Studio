@@ -36,6 +36,7 @@ public class MazeMaker {
 
                 String[] tokens = line.split(" ");
                 int id = Integer.parseInt(tokens[0]);
+                System.out.println("id = " + id);
                 int row = Integer.parseInt(tokens[1]);
                 int col = Integer.parseInt(tokens[2]);
                 Location location = new Location(row, col);
@@ -71,6 +72,10 @@ public class MazeMaker {
                 int weight = 1;
                 if(tokens.length == 3 && tokens[2].equals(GHOST)) {
                     weight = 1000;
+                }
+
+                if(locations.get(origin) == null) {
+                    System.out.println(origin + " is null");
                 }
 
                 maze.connectUndirected(locations.get(origin),

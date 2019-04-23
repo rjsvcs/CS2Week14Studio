@@ -75,8 +75,13 @@ public class Maze extends Graph<Location> {
     public void connectUndirected(Location fromValue, Location toValue, int weight) {
         weight = ghosts.contains(fromValue) || ghosts.contains(toValue) ?
                 1000 : 1;
-        super.connectUndirected(fromValue, toValue, weight);
-        pathways.addAll(fromValue.getPath(toValue));
+        try {
+            super.connectUndirected(fromValue, toValue, weight);
+            pathways.addAll(fromValue.getPath(toValue));
+        } catch(NullPointerException npe) {
+            npe.printStackTrace();
+            System.exit(1);
+        }
     }
 
     public CellType getCellType(int row, int col) {
