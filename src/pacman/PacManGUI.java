@@ -56,13 +56,18 @@ public class PacManGUI extends Application implements Images {
             moveDijkstra.setOnAction(
                     e -> maze.movePacMan(maze::dijkstrasShortestPath));
 
+            Button reset = makeButton("Try Again");
+            reset.setOnAction(e -> loadMaze());
+
             GridPane bottom = new GridPane();
             bottom.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
             bottom.add(moveBFS, 0, 0);
             bottom.add(moveDijkstra, 1, 0);
+            bottom.add(reset, 2, 0);
             ColumnConstraints constraints = new ColumnConstraints();
-            constraints.setPercentWidth(50);
-            bottom.getColumnConstraints().addAll(constraints, constraints);
+            constraints.setPercentWidth(33.333);
+            bottom.getColumnConstraints().addAll(constraints, constraints,
+                    constraints);
 
             main.setBottom(bottom);
 
@@ -92,23 +97,27 @@ public class PacManGUI extends Application implements Images {
         System.exit(0);
     }
 
-    private void loadMaze() throws IOException{
-        maze = MazeMaker.readMaze(new FileInputStream(mazeFilename));
-        maze.addPacManObserver(this::pacManChanged);
+    private void loadMaze() {
+        try {
+            maze = MazeMaker.readMaze(new FileInputStream(mazeFilename));
+            maze.addPacManObserver(this::pacManChanged);
 
-        int rows = maze.getRows();
-        int cols = maze.getCols();
+            int rows = maze.getRows();
+            int cols = maze.getCols();
 
-        mazeCells = new MazeCell[rows][cols];
+            mazeCells = new MazeCell[rows][cols];
 
-        mazePane.getChildren().clear();
+            mazePane.getChildren().clear();
 
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
-                MazeCell cell = new MazeCell(maze.getCellType(row, col));
-                mazeCells[row][col] = cell;
-                mazePane.add(cell, col, row);
+            for (int row = 0; row < rows; row++) {
+                for (int col = 0; col < cols; col++) {
+                    MazeCell cell = new MazeCell(maze.getCellType(row, col));
+                    mazeCells[row][col] = cell;
+                    mazePane.add(cell, col, row);
+                }
             }
+        } catch(IOException ioe) {
+
         }
     }
 
@@ -128,6 +137,10 @@ public class PacManGUI extends Application implements Images {
             }
         }
 
+        if(!event.getPacMan().isAlive()) {
+            SoundBoard.play(SoundBoard.END);
+            //mazeCells[dest.getRow()][dest.getCol()].clearPacMan();
+        }
         if(pellets) {
             SoundBoard.play(SoundBoard.CHOMP);
         }

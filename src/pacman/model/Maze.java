@@ -38,6 +38,11 @@ public class Maze extends Graph<Location> {
     private final Set<Ghost> ghosts;
 
     /**
+     * The current locations of all ghosts.
+     */
+    private final Set<Location> ghostLocations;
+
+    /**
      * The locations of all of the pathways in the maze.
      */
     private final Set<Location> pathways;
@@ -52,8 +57,14 @@ public class Maze extends Graph<Location> {
      */
     private final int cols;
 
+    /**
+     * The set of registered Pac-Man observers.
+     */
     private final Set<Observer<PacManEvent>> pacManObservers;
 
+    /**
+     * The set of registered ghost observers.
+     */
     private final Set<Observer<GhostEvent>> ghostObservers;
 
     public Maze(int rows, int cols, Location pacManLocation,
@@ -63,6 +74,7 @@ public class Maze extends Graph<Location> {
         this.pacMan = new PacMan(pacManLocation);
         this.pellets = pellets;
         this.ghosts = new HashSet<>();
+        this.ghostLocations = ghostLocations;
         for(Location location : ghostLocations) {
             ghosts.add(new Ghost(location));
         }
@@ -90,8 +102,8 @@ public class Maze extends Graph<Location> {
 
     @Override
     public void connectUndirected(Location fromValue, Location toValue, int weight) {
-        weight = ghosts.contains(fromValue) || ghosts.contains(toValue) ?
-                1000 : 1;
+        weight = ghostLocations.contains(fromValue) ||
+                ghostLocations.contains(toValue) ?  1000 : 1;
         try {
             super.connectUndirected(fromValue, toValue, weight);
             pathways.addAll(fromValue.getPath(toValue));
@@ -108,7 +120,7 @@ public class Maze extends Graph<Location> {
     public CellType getCellType(Location location) {
         if(location.equals(pacMan.getLocation())) {
             return CellType.PACMAN;
-        } else if(ghosts.contains(location)) {
+        } else if(ghostLocations.contains(location)) {
             return CellType.GHOST;
         } else if(pellets.contains(location)) {
             return CellType.POWER_PELLET;
@@ -128,6 +140,10 @@ public class Maze extends Graph<Location> {
     }
 
     public void movePacMan(PathFinder finder) {
+        if(!pacMan.isAlive()) {
+            return;
+        }
+
         Path path = findPath(pacMan.getLocation(), pellets, finder);
 
         if(path != null) {
@@ -136,44 +152,14 @@ public class Maze extends Graph<Location> {
             if(pellets.contains(pacMan.getLocation())) {
                 pellets.remove(pacMan.getLocation());
                 pacMan.setPoweredUp();
+            } else if(ghostLocations.contains(pacMan.getLocation())) {
+                pacMan.setDead();
             }
 
             PacManEvent event = new PacManEvent(this, pacMan, path.getStart(),
                     path.getNext());
             for(Observer<PacManEvent> observer : pacManObservers) {
                 observer.handle(event);
-            }
-        }
-
-        moveGhosts();
-    }
-
-    private void moveGhosts() {
-        if(pacMan.isPoweredUp()) {
-            // move ghosts randomly
-            for(Ghost ghost : ghosts) {
-                ghost.setVulnerable();
-                if(ghost.getLocation().equals(pacMan.getLocation())) {
-                    // ghost is dead
-                    ghost.setDead();
-                } else {
-
-                }
-            }
-        } else {
-            // move ghosts towards Pac-Man
-            for(Ghost ghost : ghosts) {
-                if(ghost.getLocation().equals(pacMan.getLocation()))  {
-                    // Pac-Man is dead
-                    pacMan.setDead();
-                } else {
-                    List<Location> pathToPacMan =
-                            breadthFirstPath(ghost.getLocation(),
-                                    pacMan.getLocation());
-                    if(pathToPacMan != null && pathToPacMan.size() > 0) {
-                        ghost.setLocation(pathToPacMan.get(0));
-                    }
-                }
             }
         }
     }

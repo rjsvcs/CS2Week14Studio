@@ -3,20 +3,13 @@ package pacman.model;
 import java.util.Collection;
 
 public class GhostEvent extends MazeEvent {
-    private final PacMan pacMan;
-    private final Collection<Ghost> ghosts;
+    private final Ghost ghost;
 
-    public GhostEvent(Maze source, PacMan pacMan, Collection<Ghost> ghosts) {
+
+    public GhostEvent(Maze source, Ghost ghost, PacMan pacMan) {
         super(source);
-        this.pacMan = pacMan;
-        this.ghosts = ghosts;
+        this.ghost = ghost;
     }
 
-    public PacMan getPacMan() {
-        return pacMan;
-    }
 
-    public Collection<Ghost> getGhosts() {
-        return ghosts;
-    }
 }
