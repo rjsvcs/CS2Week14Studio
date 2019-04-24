@@ -1,15 +1,17 @@
 package pacman;
 
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.Label;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import pacman.model.Location;
 import pacman.model.Maze;
 import pacman.model.MazeMaker;
@@ -19,10 +21,22 @@ import java.io.*;
 import java.util.List;
 
 public class PacManGUI extends Application implements Images {
+    /**
+     * Message displayed at the start of a game.
+     */
+    private static final String READY_PLAYER_1 = "READY PLAYER 1";
+
+    /**
+     * Message displayed when the game is over.
+     */
+    private static final String GAME_OVER = "GAME OVER";
+
     private String mazeFilename;
     private Maze maze;
     private MazeCell[][] mazeCells;
     private GridPane mazePane;
+    private Label feedback;
+    private FadeTransition fade;
 
     @Override
     public void init() throws Exception {
@@ -37,15 +51,32 @@ public class PacManGUI extends Application implements Images {
         mazeFilename = params.get(0);
 
         mazePane = new GridPane();
+        feedback = new Label();
+        feedback.setBackground(
+                new Background(new BackgroundFill(Color.TRANSPARENT,
+                        CornerRadii.EMPTY, Insets.EMPTY)));
+        feedback.setFont(Font.loadFont("file:media/fonts/8-bit-wonder.ttf", 48));
+        feedback.setAlignment(Pos.CENTER);
+        feedback.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        feedback.setTextFill(Color.WHITE);
+
+        fade = new FadeTransition(Duration.millis(750), feedback);
+        fade.setFromValue(1);
+        fade.setToValue(0);
+        fade.setCycleCount(3);
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         try {
             loadMaze();
 
             BorderPane main = new BorderPane();
-            main.setCenter(mazePane);
+
+            StackPane console = new StackPane();
+
+            console.getChildren().addAll(mazePane, feedback);
+            main.setCenter(console);
 
             Button moveBFS = makeButton("Use BFS!");
             moveBFS.setOnAction(e -> {
@@ -116,6 +147,8 @@ public class PacManGUI extends Application implements Images {
                     mazePane.add(cell, col, row);
                 }
             }
+            feedback.setText(READY_PLAYER_1);
+            fade.play();
         } catch(IOException ioe) {
 
         }
@@ -139,6 +172,8 @@ public class PacManGUI extends Application implements Images {
 
         if(!event.getPacMan().isAlive()) {
             SoundBoard.play(SoundBoard.END);
+            feedback.setText(GAME_OVER);
+            feedback.setOpacity(1);
             //mazeCells[dest.getRow()][dest.getCol()].clearPacMan();
         }
         if(pellets) {

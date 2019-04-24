@@ -152,6 +152,11 @@ public class Maze extends Graph<Location> {
             if(pellets.contains(pacMan.getLocation())) {
                 pellets.remove(pacMan.getLocation());
                 pacMan.setPoweredUp();
+
+                for(Ghost ghost : ghosts) {
+                    ghost.setVulnerable();
+                }
+
             } else if(ghostLocations.contains(pacMan.getLocation())) {
                 pacMan.setDead();
             }
