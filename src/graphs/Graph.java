@@ -111,47 +111,9 @@ public class Graph<T> {
      * @return The values in the path, if it exists. An empty list, otherwise.
      */
     public Path<T> dijkstrasShortestPath(T startValue, T endValue) {
-        Vertex<T> start = vertices.get(startValue);
-        Vertex<T> end = vertices.get(endValue);
-
-        // set up map and priority queue of path tuples
-        Map<Vertex<T>, PathTuple<T>> predecessors = new HashMap<>();
-        PriorityQueue<PathTuple<T>> pq = new PriorityQueue<>();
-
-        for(Vertex<T> vertex : vertices.values()) {
-            PathTuple<T> tuple = new PathTuple<>(vertex);
-            predecessors.put(vertex, tuple);
-            pq.enqueue(tuple);
-        }
-
-        PathTuple<T> startTuple = predecessors.get(start);
-        startTuple.update(null, 0);
-
-        // the main loop
-        while(!pq.isEmpty()) {
-            PathTuple<T> closest = pq.dequeue();
-            if(closest.getDistanceFromStart() == Integer.MAX_VALUE) {
-                break;
-            }
-            Vertex<T> vertex = closest.getVertex();
-            for(Edge<T> edge : vertex.getNeighbors()) {
-                Vertex<T> neighbor = edge.getTo();
-                int distanceThroughV = closest.getDistanceFromStart() +
-                        edge.getWeight();
-                predecessors.get(neighbor).update(vertex, distanceThroughV);
-            }
-        }
-
-        // construct the path
-        PathTuple<T> next = predecessors.get(end);
-        Path<T> path = new Path<>(next.getDistanceFromStart());
-        if(next.getPredecessor() != null) {
-            while (next != null) {
-                path.add(0, next.getVertex().getValue());
-                next = predecessors.get(next.getPredecessor());
-            }
-        }
-
+        List<T> values = breadthFirstPath(startValue, endValue);
+        Path path = new Path(values.size());
+        path.addAll(values);
         return path;
     }
 

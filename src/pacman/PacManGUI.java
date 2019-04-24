@@ -174,7 +174,6 @@ public class PacManGUI extends Application implements Images {
             SoundBoard.play(SoundBoard.END);
             feedback.setText(GAME_OVER);
             feedback.setOpacity(1);
-            //mazeCells[dest.getRow()][dest.getCol()].clearPacMan();
         }
         if(pellets) {
             SoundBoard.play(SoundBoard.CHOMP);
