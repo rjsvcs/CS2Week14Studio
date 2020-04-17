@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="PacManGUI Simple" type="Application" factoryName="Application">
+    <option name="INCLUDE_PROVIDED_SCOPE" value="true" />
+    <option name="MAIN_CLASS_NAME" value="pacman.PacManGUI" />
+    <module name="CS2Week14Studio" />
+    <option name="PROGRAM_PARAMETERS" value="media/mazes/simple.maz" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="pacman.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

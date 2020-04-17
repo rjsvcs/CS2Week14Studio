@@ -179,6 +179,7 @@ public class Maze extends Graph<Location> {
             List<Location> candidate = finder.findPath(start, target);
             if(candidate.size() > 0 && candidate.size() < shortest) {
                 path = new Path(candidate);
+                shortest = candidate.size();
             }
         }
         return path;
